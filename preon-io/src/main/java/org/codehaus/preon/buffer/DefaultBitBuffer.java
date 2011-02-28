@@ -565,7 +565,7 @@ public class DefaultBitBuffer implements BitBuffer {
 
         if ((this.bitPos % 8) != 0) {
             throw new BitBufferException(
-                    "8-bit alignemnt exception. Bit possition (" + bitPos
+                    "8-bit alignment exception. Bit position (" + bitPos
                             + ") should be 8-bit aligned");
         }
 
@@ -586,6 +586,12 @@ public class DefaultBitBuffer implements BitBuffer {
         this.bitPos = bitPos + bitsToRead;
 
         return slicedByteBuffer;
+    }
+
+    public ByteBuffer readAsByteBuffer() {
+        ByteBuffer buffer =  byteBuffer.duplicate();
+        buffer.rewind();
+        return buffer;
     }
 
     /**

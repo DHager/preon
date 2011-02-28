@@ -50,6 +50,7 @@ import nl.flotsam.pecia.builder.base.DefaultDocumentBuilder;
 import nl.flotsam.pecia.builder.html.HtmlDocumentBuilder;
 import nl.flotsam.pecia.builder.xml.StreamingXmlWriter;
 import nl.flotsam.pecia.builder.xml.XmlWriter;
+import org.codehaus.preon.binding.BindingDecorator;
 import org.codehaus.preon.buffer.BitBuffer;
 import org.codehaus.preon.buffer.DefaultBitBuffer;
 import org.codehaus.preon.channel.BitChannel;
@@ -319,8 +320,13 @@ public class Codecs {
      */
 	public static <T> Codec<T> create(Class<T> type, CodecFactory[] factories,
 			CodecDecorator[] decorators) {
-		return new DefaultCodecFactory().create(null, type,
-				factories, decorators);
+        return create(type, factories, decorators, new BindingDecorator[0]);
 	}
+
+    public static <T> Codec<T> create(Class<T> type, CodecFactory[] factories,
+            CodecDecorator[] decorators, BindingDecorator[] bindingDecorators) {
+        return new DefaultCodecFactory().create(null, type,
+                factories, decorators, bindingDecorators);
+    }
 
 }
