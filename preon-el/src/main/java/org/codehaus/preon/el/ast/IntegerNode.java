@@ -96,4 +96,8 @@ public class IntegerNode<E> extends AbstractNode<Integer, E> {
         return this;
     }
 
+    @Override
+    public String toString() {
+        return value.toString();
+    }
 }

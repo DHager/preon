@@ -250,4 +250,9 @@ public class RelationalNode<T extends Comparable<T>, E> extends
     public Node<Boolean, E> rescope(ReferenceContext<E> context) {
         return new RelationalNode<T,E>(relation, lhs.rescope(context), rhs.rescope(context));
     }
+
+    @Override
+    public String toString() {
+        return lhs.toString() + " " + relation.toString() + " " + rhs.toString();
+    }
 }

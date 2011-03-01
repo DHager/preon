@@ -346,6 +346,13 @@ public class BindingsContext implements ObjectResolverContext {
             }
         }
 
+        @Override
+        public String toString() {
+            return binding.toString();
+        }
+
+
+
     }
 
     /**

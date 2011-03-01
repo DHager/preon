@@ -106,4 +106,11 @@ public class ConvertingReference<T, E> implements Reference<E> {
         return new ConvertingReference<T,E>(type, reference.rescope(context));
     }
 
+    @Override
+    public String toString() {
+        return reference.toString();
+    }
+
+
+
 }

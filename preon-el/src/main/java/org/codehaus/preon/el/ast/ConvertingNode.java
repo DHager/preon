@@ -140,4 +140,11 @@ public class ConvertingNode<T extends Comparable<T>, E, S> implements Node<T, E>
         }
     }
 
+    @Override
+    public String toString() {
+        return source.toString();
+    }
+
+
+
 }

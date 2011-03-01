@@ -47,6 +47,8 @@ import org.codehaus.preon.el.*;
 import java.lang.reflect.AnnotatedElement;
 import java.util.ArrayList;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A Codec supporting the {@link Choices} annotation.
@@ -55,6 +57,8 @@ import java.util.List;
  * @param <T> The type of object to be returned.
  */
 public class SelectFromCodec<T> implements Codec<T> {
+
+    private static final Logger logger = LoggerFactory.getLogger(SelectFromCodec.class);
 
     /**
      * The name of the variable that holds the prefix's value.
@@ -130,24 +134,31 @@ public class SelectFromCodec<T> implements Codec<T> {
 
     public T decode(BitBuffer buffer, Resolver resolver, Builder builder)
             throws DecodingException {
+        logger.trace("Prefix size is {}",prefixSize);
         if (prefixSize <= 0) {
             for (int i = 0; i < conditions.size(); i++) {
-                if (conditions.get(i).eval(resolver)) {
+                final Expression<Boolean,Resolver> e = conditions.get(i);
+                if (e.eval(resolver)) {
+                    logger.trace("Condition match: {}",e);
                     return (T) codecs.get(i).decode(buffer, resolver, builder);
+                }else{
+                    logger.trace("Condition fails: {}",e);
                 }
             }
         } else {
-            int prefix = buffer.readAsInt(this.prefixSize, byteOrder);
+            int prefix = buffer.readAsInt(prefixSize, byteOrder);
+            logger.trace("Prefix found: {}",prefix);
             for (int i = 0; i < conditions.size(); i++) {
-                if (conditions.get(i)
-                        .eval(new PrefixResolver(resolver, prefix))) {
+                if (conditions.get(i).eval(new PrefixResolver(resolver, prefix))) {
                     return (T) codecs.get(i).decode(buffer, resolver, builder);
                 }
             }
         }
+        logger.debug("Falling back on default codec");
         if (defaultCodec != null) {
             return (T) defaultCodec.decode(buffer, resolver, builder);
         } else {
+            logger.debug("Default codec is null, cannot decode");
             return null;
         }
     }

@@ -179,6 +179,13 @@ public class StandardBindingFactory implements BindingFactory {
             }
         }
 
+        @Override
+        public String toString() {
+            return field.toString();
+        }
+
+
+
     }
 
     private interface Decorator<T> {

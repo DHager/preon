@@ -126,4 +126,11 @@ public class ReferenceNode<T, E> implements Node<T, E> {
         }
     }
 
+    @Override
+    public String toString() {
+        return reference.toString();
+    }
+
+
+
 }

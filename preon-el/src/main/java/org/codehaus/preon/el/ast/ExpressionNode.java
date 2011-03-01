@@ -125,4 +125,11 @@ public class ExpressionNode<T extends Comparable<T>, E> extends AbstractNode<T, 
         expression.document(target);
     }
 
+    @Override
+    public String toString() {
+        return expression.toString();
+    }
+
+
+
 }

@@ -106,4 +106,11 @@ public class ContextReplacingReference implements Reference<Resolver> {
         return reference.rescope(context);
     }
 
+    @Override
+    public String toString() {
+        return reference.toString();
+    }
+
+
+
 }

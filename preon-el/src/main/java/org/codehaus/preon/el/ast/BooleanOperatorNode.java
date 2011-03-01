@@ -216,4 +216,11 @@ public class BooleanOperatorNode<E> extends AbstractNode<Boolean, E> {
         return lhs.isConstantFor(eReferenceContext) && rhs.isConstantFor(eReferenceContext);
 
     }
+
+    @Override
+    public String toString() {
+        return lhs.toString() + " " + operator.toString() + " " + rhs.toString();
+    }
+
+
 }

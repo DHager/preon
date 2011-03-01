@@ -117,4 +117,11 @@ public class IntegerReferenceNode<E> extends AbstractNode<Integer, E> {
     public boolean isParameterized() {
         return true;
     }
+
+    @Override
+    public String toString() {
+        return reference.toString();
+    }
+
+
 }

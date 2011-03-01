@@ -303,4 +303,9 @@ public class ArithmeticNode<E> extends AbstractNode<Integer, E> {
     public boolean isConstantFor(ReferenceContext<E> context) {
         return lhs.isConstantFor(context) && rhs.isConstantFor(context);
     }
+
+    @Override
+    public String toString() {
+        return lhs.toString() + " " + operator.toString() + " " + rhs.toString();
+    }
 }

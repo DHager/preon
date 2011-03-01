@@ -107,4 +107,11 @@ public class StringNode<E> extends AbstractNode<String, E> {
         target.text("\"");
     }
 
+    @Override
+    public String toString() {
+        return "\"" + value + "\"";
+    }
+
+
+
 }
