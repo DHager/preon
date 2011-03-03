@@ -46,6 +46,8 @@ import org.codehaus.preon.util.AnnotationWrapper;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.AnnotatedElement;
 import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link CodecFactory} that will be triggered by {@link Bound} or {@link BoundList} annotations on arrays. Note that
@@ -56,6 +58,8 @@ import java.util.List;
  */
 public class ArrayCodecFactory implements CodecFactory {
 
+
+    private static final Logger logger = LoggerFactory.getLogger(ArrayCodecFactory.class);
     /**
      * The {@link CodecFactory} that will be used for constructing the {@link Codecs} to construct elements in the
      * List.
@@ -88,8 +92,12 @@ public class ArrayCodecFactory implements CodecFactory {
         if (metadata != null
                 && (settings = metadata.getAnnotation(BoundList.class)) != null
                 && type.isArray()
-                && settings.size() != null
-                && settings.size().length() != 0) {
+            ) {
+            if( settings.size() == null || settings.size().length() == 0){
+                throw new CodecConstructionException("Primitive arrays must have a definite length: "+metadata);
+            }
+
+            logger.debug("Binding array to: {}",metadata);
             Expression<Integer, Resolver> expr = getSizeExpression(settings,
                     context);
             Codec<Object> elementCodec = null;

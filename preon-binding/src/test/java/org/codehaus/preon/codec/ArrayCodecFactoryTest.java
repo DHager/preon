@@ -42,6 +42,7 @@ import org.mockito.Mock;
 import org.mockito.runners.MockitoJUnitRunner;
 
 import java.lang.reflect.AnnotatedElement;
+import org.codehaus.preon.CodecConstructionException;
 
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.nullValue;
@@ -70,13 +71,13 @@ public class ArrayCodecFactoryTest {
         factory = new ArrayCodecFactory(delegate);
     }
 
-    @Test
+    @Test(expected=CodecConstructionException.class)
     public void shouldNotTryToReturnCodecInCaseSizeUndefined() {
         Object array = new byte[0];
         Class<?> type = array.getClass();
         when(metadata.getAnnotation(BoundList.class)).thenReturn(boundList);
         when(boundList.size()).thenReturn("");
-        assertThat(factory.create(metadata, type, context), is(nullValue()));
+        factory.create(metadata, type, context);
     }
 
 }
