@@ -39,6 +39,8 @@ import java.util.List;
 import org.codehaus.preon.Codec;
 import org.codehaus.preon.CodecFactory;
 import org.codehaus.preon.ResolverContext;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 /**
@@ -48,6 +50,8 @@ import org.codehaus.preon.ResolverContext;
  * @author Wilfred Springer
  */
 public class CompoundCodecFactory implements CodecFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(CompoundCodecFactory.class);
 
     /** The sorted list of {@link CodecFactory CodecFactories} to which this {@link CodecFactory} will delegate. */
     private final List<CodecFactory> factories = new ArrayList<CodecFactory>();

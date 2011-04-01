@@ -39,6 +39,8 @@ import org.codehaus.preon.annotation.BoundString;
 import org.codehaus.preon.buffer.BitBuffer;
 
 import java.lang.reflect.AnnotatedElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link CodecFactory} generating {@link Codecs} capable of generating String from {@link BitBuffer} content.
@@ -46,6 +48,8 @@ import java.lang.reflect.AnnotatedElement;
  * @author Wilfred Springer
  */
 public class StringCodecFactory implements CodecFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(StringCodecFactory.class);
 
     @SuppressWarnings("unchecked")
     public <T> Codec<T> create(AnnotatedElement metadata, Class<T> type,
@@ -59,10 +63,12 @@ public class StringCodecFactory implements CodecFactory {
                 if (settings.size().length() > 0) {
                     Expression<Integer, Resolver> expr;
                     expr = Expressions.createInteger(context, settings.size());
+                    logger.debug("Binding fixed-length ({}) string to: {}",expr,metadata);
                     return (Codec<T>) new FixedLengthStringCodec(settings
                             .encoding(), expr, settings.match(), settings
                             .converter().newInstance());
                 } else {
+                    logger.debug("Binding null-terminated string to: {}",metadata);
                     return (Codec<T>) new NullTerminatedStringCodec(settings
                             .encoding(), settings.match(), settings.converter()
                             .newInstance());

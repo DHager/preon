@@ -47,6 +47,8 @@ import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
 import java.lang.reflect.Field;
 import java.util.Set;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link BindingFactory} that wraps another {@link BindingFactory}, creating {@link Binding Bindings} that are bound
@@ -55,6 +57,9 @@ import java.util.Set;
  * @author Wilfred Springer
  */
 public class ConditionalBindingFactory implements BindingFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(ConditionalBindingFactory.class);
+
 
     /**
      * The {@link BindingFactory} creating the {@link Binding}s that will be wrapped with {@link ConditionalBinding}
@@ -148,6 +153,7 @@ public class ConditionalBindingFactory implements BindingFactory {
         public void load(Object object, BitBuffer buffer, Resolver resolver, Builder builder)
                 throws DecodingException {
             if (expr.eval(resolver)) {
+                logger.trace("Conditionally binding with expression: {}",expr);
                 binding.load(object, buffer, resolver, builder);
             }
         }

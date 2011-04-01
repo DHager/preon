@@ -59,10 +59,14 @@ import org.codehaus.preon.buffer.ByteOrder;
 import org.codehaus.preon.channel.BitChannel;
 import org.codehaus.preon.descriptor.Documenters;
 import org.codehaus.preon.descriptor.NullDocumenter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /** The {@link org.codehaus.preon.Codec} capable of decoding numeric types in a sensible way. */
 public class NumericCodec implements Codec<Object> {
 
+
+    private static final Logger logger = LoggerFactory.getLogger(NumericCodec.class);
     static Map<Class<?>, NumericType> NUMERIC_TYPES = new HashMap<Class<?>, NumericType>(
             8);
 
@@ -102,6 +106,7 @@ public class NumericCodec implements Codec<Object> {
                          Builder builder) throws DecodingException {
         int size = ((Number) (this.sizeExpr.eval(resolver))).intValue();
         Object result = type.decode(buffer, size, byteOrder);
+        logger.trace("Read {} bytes to decode {} ",size,result);
         if (matchExpr != null) {
             if (!matchExpr.eval(resolver).equals(Converters.toInt(result))) {
                 StringBuilder stringBuilder = new StringBuilder();
@@ -351,6 +356,7 @@ public class NumericCodec implements Codec<Object> {
             if (NUMERIC_TYPES.keySet().contains(actualType)) {
                 NumericType numericType = NUMERIC_TYPES.get(actualType);
                 if (overrides == null || overrides.isAnnotationPresent(Bound.class)) {
+                    logger.debug("Binding number to multiple: {}",context);
                     ByteOrder endian = ByteOrder.LittleEndian;
                     int size = numericType.getDefaultSize();
                     Expression<Integer, Resolver> sizeExpr = Expressions
@@ -360,6 +366,7 @@ public class NumericCodec implements Codec<Object> {
                 }
                 if (overrides != null
                         && overrides.isAnnotationPresent(BoundNumber.class)) {
+                    logger.debug("Binding number to: {}",overrides);
                     BoundNumber numericMetadata = overrides
                             .getAnnotation(BoundNumber.class);
                     ByteOrder endian = numericMetadata.byteOrder();

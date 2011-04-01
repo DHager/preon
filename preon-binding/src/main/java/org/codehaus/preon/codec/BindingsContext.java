@@ -34,6 +34,7 @@ package org.codehaus.preon.codec;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 
 import org.codehaus.preon.el.*;
@@ -151,6 +152,28 @@ public class BindingsContext implements ObjectResolverContext {
             target.text("no variables");
         }
     }
+
+    @Override
+    public String toString() {
+        final StringBuilder sb = new StringBuilder();
+        sb.append("[");
+        Iterator<String> iter = bindingsByName.keySet().iterator();
+        while(iter.hasNext()){
+            final String key = iter.next();
+            final Binding binding = bindingsByName.get(key);
+            sb.append("\n\t");
+            sb.append(binding.toString());
+            if(iter.hasNext()){
+                sb.append(",");
+            }else{
+                sb.append("\n");
+            }
+        }
+        sb.append("]");
+        return sb.toString();
+    }
+
+
 
     /*
      * (non-Javadoc)

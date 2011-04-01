@@ -44,12 +44,16 @@ import org.codehaus.preon.channel.BitChannel;
 import org.codehaus.preon.descriptor.Documenters;
 
 import java.io.IOException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link org.codehaus.preon.Codec} decoding Strings based on a fixed number of <em>bytes</em>. (Note that it says
  * <i>bytes</i>, not <i>characters</i>.)
  */
 public class FixedLengthStringCodec implements Codec<String> {
+
+    private static final Logger logger = LoggerFactory.getLogger(FixedLengthStringCodec.class);
 
     private final BoundString.Encoding encoding;
 
@@ -77,6 +81,7 @@ public class FixedLengthStringCodec implements Codec<String> {
         }
         String result;
         result = encoding.decode(bytes);
+        logger.debug("Decoded {} for string: {}",bytes,result);
         if (match.length() > 0) {
             if (!match.equals(result)) {
                 throw new DecodingException(new IllegalStateException(

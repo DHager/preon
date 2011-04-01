@@ -50,12 +50,16 @@ import java.util.Map;
 import java.util.HashMap;
 import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Created by IntelliJ IDEA. User: wilfred Date: Oct 24, 2009 Time: 5:03:58 PM To change this template use File |
  * Settings | File Templates.
  */
 public class EnumCodec<T> implements Codec<T> {
+
+    private static final Logger logger = LoggerFactory.getLogger(EnumCodec.class);
 
     private final Class<T> type;
 
@@ -204,6 +208,7 @@ public class EnumCodec<T> implements Codec<T> {
                 BoundNumber settings = metadata.getAnnotation(BoundNumber.class);
                 Expression<Integer, Resolver> sizeExpr = Expressions.createInteger(
                         context, settings.size());
+                logger.debug("Binding Enum to: {} ",metadata);
                 return new EnumCodec<T>(type, mapping, sizeExpr, settings
                         .byteOrder());
 

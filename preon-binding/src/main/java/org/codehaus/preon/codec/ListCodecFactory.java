@@ -71,7 +71,8 @@ import org.codehaus.preon.util.CodecDescriptorHolder;
 import org.codehaus.preon.util.EvenlyDistributedLazyList;
 import org.codehaus.preon.util.ParaContentsDocument;
 
-import javax.annotation.Nullable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link CodecFactory} capable of supporting Lists. <p/> <p> There are a couple of cases that we need to clarify.
@@ -85,6 +86,9 @@ import javax.annotation.Nullable;
  * @author Wilfred Springer
  */
 public class ListCodecFactory implements CodecFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(ListCodecFactory.class);
+
 
     /**
      * The {@link CodecFactory} that will be used for constructing the {@link Codecs} to construct elements in the
@@ -119,6 +123,7 @@ public class ListCodecFactory implements CodecFactory {
                 // an 'EOF' or a DecodingException. In case of a
                 // DecodingException, the pointer is expected to be moved back
                 // to the first position.
+                logger.debug("Binding list of unknown size: {}",context);
                 return (Codec<T>) new DynamicListCodec(codec);
             } else if (settings.offset().length() != 0) {
                 // So the size is known. If the offset attribute has been set,
@@ -132,6 +137,7 @@ public class ListCodecFactory implements CodecFactory {
                         context, holder), settings.offset());
                 Codec<T> result = (Codec<T>) new OffsetListCodec(offsets, size,
                         codec);
+                logger.debug("Binding fixed total-length list to: {}",context);
                 // TODO:
                 holder.setDescriptor(result.getCodecDescriptor());
                 return result;
@@ -151,9 +157,11 @@ public class ListCodecFactory implements CodecFactory {
                         return new StaticListCodec(expr, codec, elementSize);
                     } else {
                         elementSize = elementSize.rescope(context);
+                        logger.debug("Binding indeterminate item-length list to: {}",context);
                         return new StaticListCodec(expr.rescope(context), codec, elementSize);
                     }
                 } else {
+                    logger.debug("Binding list of varying size: {}",context);
                     return new DynamicListCodec(codec);
                 }
             }

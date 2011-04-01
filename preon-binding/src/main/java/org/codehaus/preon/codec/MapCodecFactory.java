@@ -41,8 +41,12 @@ import org.codehaus.preon.annotation.Choices;
 import java.lang.reflect.AnnotatedElement;
 import java.util.List;
 import java.util.Map;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class MapCodecFactory implements CodecFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(MapCodecFactory.class);
 
     private final CodecFactory codecFactory;
 
@@ -52,6 +56,7 @@ public class MapCodecFactory implements CodecFactory {
 
     public <T> Codec<T> create(AnnotatedElement metadata, Class<T> type, ResolverContext context) {
         if (Map.class.isAssignableFrom(type)) {
+
             BoundList boundList = metadata.getAnnotation(BoundList.class);
             if (boundList != null && typeIsGuaranteedToBeEntry(boundList)) {
                 Codec<List> listCodec =

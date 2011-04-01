@@ -43,6 +43,8 @@ import nl.flotsam.pecia.ParaContents;
 
 import java.io.ByteArrayOutputStream;
 import java.io.UnsupportedEncodingException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * A {@link org.codehaus.preon.Codec} that reads null-terminated Strings. Basically, it will read bytes until it
@@ -52,6 +54,9 @@ import java.io.UnsupportedEncodingException;
  * @author Wilfred Springer (wis)
  */
 public class NullTerminatedStringCodec implements Codec<String> {
+
+    private static final Logger logger = LoggerFactory.getLogger(NullTerminatedStringCodec.class);
+
 
     private BoundString.Encoding encoding;
 
@@ -85,7 +90,9 @@ public class NullTerminatedStringCodec implements Codec<String> {
             }
         }
         try {
-            return new String(out.toByteArray(), charset);
+            final String result = new String(out.toByteArray(), charset);
+            logger.debug("Decoded (charset {}) string: {}", charset, result);
+            return result;
         } catch (UnsupportedEncodingException uee) {
             throw new DecodingException(uee);
         }

@@ -45,8 +45,12 @@ import org.codehaus.preon.descriptor.Documenters;
 
 import java.io.IOException;
 import java.lang.reflect.AnnotatedElement;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class BoundBufferCodecFactory implements CodecFactory {
+
+    private static final Logger logger = LoggerFactory.getLogger(BoundBufferCodecFactory.class);
 
     private Class<?> BYTE_CLASS = (new byte[0]).getClass();
 
@@ -54,6 +58,7 @@ public class BoundBufferCodecFactory implements CodecFactory {
                                ResolverContext context) {
         if (type.isArray() && BYTE_CLASS.equals(type)
                 && metadata.isAnnotationPresent(BoundBuffer.class)) {
+            logger.debug("Binding BoundBuffer to: {}",metadata);
             return (Codec<T>) new BoundBufferCodec(metadata.getAnnotation(
                     BoundBuffer.class).match());
         } else {
